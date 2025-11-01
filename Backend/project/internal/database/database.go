@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	_ "github.com/lib/pq"
-	"backend/internal/config"
+	"beautiful-minds/backend/project/config"
 )
 
 func Connect(cfg *config.Config) (*sql.DB, error) {

@@ -2,7 +2,7 @@ package repository
 
 import (
 	"database/sql"
-	"backend/internal/models"
+	"beautiful-minds/backend/project/internal/models"
 )
 
 type MemberRepository struct {
