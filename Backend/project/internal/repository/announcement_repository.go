@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"database/sql"
 	"beautiful-minds/backend/project/internal/models"
+	"database/sql"
 )
 
 type AnnouncementRepository struct {
@@ -79,4 +79,44 @@ func (r *AnnouncementRepository) Create(req *models.CreateAnnouncementRequest) (
 	}
 
 	return &a, nil
+}
+
+func (r *AnnouncementRepository) Update(id int, req *models.CreateAnnouncementRequest) (*models.Announcement, error) {
+	query := `
+		UPDATE announcements
+		SET title = $1, content = $2, is_pinned = $3
+		WHERE id = $4
+		RETURNING id, title, content, published_date, is_pinned, created_at
+	`
+
+	var a models.Announcement
+	err := r.db.QueryRow(query, req.Title, req.Content, req.IsPinned, id).Scan(
+		&a.ID, &a.Title, &a.Content, &a.PublishedDate,
+		&a.IsPinned, &a.CreatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &a, nil
+}
+
+func (r *AnnouncementRepository) Delete(id int) error {
+	query := `DELETE FROM announcements WHERE id = $1`
+	result, err := r.db.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
 }

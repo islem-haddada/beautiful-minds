@@ -10,6 +10,7 @@ const Navigation = () => {
         <li><Link to="/events">Événements</Link></li>
         <li><Link to="/about">À propos</Link></li>
         <li><Link to="/register" className="nav-cta">S'inscrire</Link></li>
+        <li><Link to="/admin" className="nav-admin">🔧 Admin</Link></li>
       </ul>
     </nav>
   );

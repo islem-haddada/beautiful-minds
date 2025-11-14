@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Events from './pages/Events';
 import About from './pages/About';
 import Register from './pages/Register';
+import Admin from './pages/Admin';
 import './App.css';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route path="/events" element={<Events />} />
             <Route path="/about" element={<About />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </main>
         <Footer />

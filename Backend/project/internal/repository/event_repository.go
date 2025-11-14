@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"database/sql"
 	"beautiful-minds/backend/project/internal/models"
+	"database/sql"
 )
 
 type EventRepository struct {
@@ -96,4 +96,49 @@ func (r *EventRepository) RegisterMember(eventID, memberID int) error {
 
 	_, err := r.db.Exec(query, eventID, memberID)
 	return err
+}
+
+func (r *EventRepository) Update(id int, req *models.CreateEventRequest) (*models.Event, error) {
+	query := `
+		UPDATE events
+		SET title = $1, description = $2, date = $3, location = $4, 
+		    image_url = $5, max_participants = $6
+		WHERE id = $7
+		RETURNING id, title, description, date, location, image_url, 
+		          max_participants, created_at
+	`
+
+	var e models.Event
+	err := r.db.QueryRow(
+		query, req.Title, req.Description, req.Date, req.Location,
+		req.ImageURL, req.MaxParticipants, id,
+	).Scan(
+		&e.ID, &e.Title, &e.Description, &e.Date, &e.Location,
+		&e.ImageURL, &e.MaxParticipants, &e.CreatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &e, nil
+}
+
+func (r *EventRepository) Delete(id int) error {
+	query := `DELETE FROM events WHERE id = $1`
+	result, err := r.db.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
 }

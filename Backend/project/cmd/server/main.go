@@ -5,13 +5,14 @@ import (
 	"net/http"
 	"os"
 
+	"beautiful-minds/backend/project/config"
+	"beautiful-minds/backend/project/internal/database"
+	"beautiful-minds/backend/project/internal/handlers"
+	"beautiful-minds/backend/project/internal/middleware"
+	"beautiful-minds/backend/project/internal/repository"
+
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
-	"beautiful-minds/backend/project/config"
-    "beautiful-minds/backend/project/internal/database"
-    "beautiful-minds/backend/project/internal/handlers"
-    "beautiful-minds/backend/project/internal/middleware"
-    "beautiful-minds/backend/project/internal/repository"
 )
 
 func main() {
@@ -53,19 +54,26 @@ func main() {
 
 	// Routes membres
 	api.HandleFunc("/members", memberHandler.GetAll).Methods("GET")
+	api.HandleFunc("/members/search", memberHandler.Search).Methods("GET")
 	api.HandleFunc("/members", memberHandler.Create).Methods("POST")
 	api.HandleFunc("/members/{id}", memberHandler.GetByID).Methods("GET")
+	api.HandleFunc("/members/{id}", memberHandler.Update).Methods("PUT")
+	api.HandleFunc("/members/{id}", memberHandler.Delete).Methods("DELETE")
 
 	// Routes événements
 	api.HandleFunc("/events", eventHandler.GetAll).Methods("GET")
 	api.HandleFunc("/events", eventHandler.Create).Methods("POST")
 	api.HandleFunc("/events/{id}", eventHandler.GetByID).Methods("GET")
+	api.HandleFunc("/events/{id}", eventHandler.Update).Methods("PUT")
+	api.HandleFunc("/events/{id}", eventHandler.Delete).Methods("DELETE")
 	api.HandleFunc("/events/{id}/register", eventHandler.RegisterMember).Methods("POST")
 
 	// Routes annonces
 	api.HandleFunc("/announcements", announcementHandler.GetAll).Methods("GET")
 	api.HandleFunc("/announcements", announcementHandler.Create).Methods("POST")
 	api.HandleFunc("/announcements/{id}", announcementHandler.GetByID).Methods("GET")
+	api.HandleFunc("/announcements/{id}", announcementHandler.Update).Methods("PUT")
+	api.HandleFunc("/announcements/{id}", announcementHandler.Delete).Methods("DELETE")
 
 	// Démarrer le serveur
 	port := os.Getenv("PORT")

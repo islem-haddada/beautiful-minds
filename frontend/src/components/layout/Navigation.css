@@ -35,6 +35,17 @@
   background-color: rgba(255, 255, 255, 0.3) !important;
 }
 
+.nav-admin {
+  background-color: #ff6b6b;
+  padding: 8px 20px !important;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.nav-admin:hover {
+  background-color: #ff5252 !important;
+}
+
 @media (max-width: 768px) {
   .nav-list {
     flex-direction: column;

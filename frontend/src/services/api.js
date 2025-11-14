@@ -5,7 +5,14 @@ export const get = async (endpoint) => {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`);
     if (!response.ok) {
-      throw new Error('Erreur réseau');
+      let text = await response.text();
+      try {
+        const body = JSON.parse(text || '{}');
+        text = body.message || JSON.stringify(body) || text;
+      } catch (e) {
+        // not JSON, keep text
+      }
+      throw new Error(`Erreur ${response.status}: ${text}`);
     }
     return await response.json();
   } catch (error) {
@@ -25,7 +32,14 @@ export const post = async (endpoint, data) => {
       body: JSON.stringify(data),
     });
     if (!response.ok) {
-      throw new Error('Erreur réseau');
+      let text = await response.text();
+      try {
+        const body = JSON.parse(text || '{}');
+        text = body.message || JSON.stringify(body) || text;
+      } catch (e) {
+        // not JSON
+      }
+      throw new Error(`Erreur ${response.status}: ${text}`);
     }
     return await response.json();
   } catch (error) {
